@@ -1,0 +1,138 @@
+{
+  "name": "My workflow 6",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hi there! 👋\nMy name is Fauzi. How can I assist you today?",
+        "availableInChat": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "7e4b8ad5-a06f-44d8-971a-278d2ebc0439",
+      "name": "When chat message received",
+      "webhookId": "811f9333-5017-44c8-ae59-68bdbddac88b"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Kamu adalah asisten toko fashion virtual bernama \"autostore\". Tugas utama kamu adalah membantu pelanggan memberikan informasi produk, deskripsi, dan harga dari katalog toko kami.\n\nIKUTI ATURAN BERIKUT:\n1. INFORMASI PRODUK: Selalu gunakan tool \"Google Sheets\" untuk mencari informasi terbaru mengenai Nama Produk, Deskripsi, dan Harga. Jangan memberikan harga atau detail produk jika tidak ada di dalam data sheet.\n2. TONE & GAYA BAHASA: Jawablah dengan ramah, sopan, dan sedikit santai (ala asisten fashion yang modis). Gunakan bahasa Indonesia yang baik.\n3. JIKA PRODUK TIDAK ADA: Jika pelanggan mencari barang yang tidak ada di daftar sheet, katakan dengan sopan bahwa produk tersebut saat ini belum tersedia dan tawarkan kategori lain yang ada (seperti Atasan, Bawahan, atau Aksesoris).\n4. FORMAT JAWABAN: Saat memberikan harga, pastikan tertulis dengan jelas (contoh: Rp125.000).\n\nTugas kamu sekarang: Bantu pelanggan yang bertanya tentang produk fashion kami!"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "f45965ac-f3ea-4952-921f-cf888bbfc728",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        128,
+        208
+      ],
+      "id": "0a07636f-af0d-42f8-aa6c-bac6cb57accf",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "PxtrYcqpMtUD994u",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1yIOylcHzDrpiYPko82wu3zGCcwxIEOdptakJTW5-ulU",
+          "mode": "list",
+          "cachedResultName": "Sheet autostore",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1yIOylcHzDrpiYPko82wu3zGCcwxIEOdptakJTW5-ulU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 775262592,
+          "mode": "list",
+          "cachedResultName": "Menata Google Sheets Toko Fashion",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1yIOylcHzDrpiYPko82wu3zGCcwxIEOdptakJTW5-ulU/edit#gid=775262592"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        368,
+        208
+      ],
+      "id": "c3ab16c8-2e14-45e0-8db3-f7df637d7af6",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "m8bnNMv3KAI3mzVM",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "70af2f0b-5ec1-4a3a-8634-975342c54ea6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "13e4240807bf94d175616559ca635639fc490c95b76204c0f889284eade1b923"
+  },
+  "id": "VWrME9ioTRCV7F2R",
+  "tags": []
+}
