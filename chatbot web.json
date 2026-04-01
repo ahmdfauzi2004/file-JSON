@@ -1,0 +1,158 @@
+{
+  "name": "chatbot web",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Halo, Ada yang bisa kami bantu?",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c3408b04-8b57-47a8-9904-b9961d18d8cf",
+      "name": "When chat message received",
+      "webhookId": "03cdd052-8280-469c-8715-150449182615"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Kamu adalah asisten customer service yang ramah, asyik, dan gaul untuk toko pakaian bernama Lova Store. Tugas utamamu adalah membantu pelanggan mencari produk fashion, memberikan rekomendasi, dan mengecek ketersediaan barang."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "d28f1431-eef5-4e97-b5e9-d0278481a5ef",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "d3e9370e-c399-4858-94ce-0b70c29cbb2a",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "rTqX1pBAvQyz8cr2",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        208
+      ],
+      "id": "d41f8b79-8383-4e0b-aabc-bb4ae8d4ecfe",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1JBPz5pg8mGYp4pVNrBHf0YAMJsXmnEGpP0MAoW_uevo",
+          "mode": "list",
+          "cachedResultName": "Lova Store",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1JBPz5pg8mGYp4pVNrBHf0YAMJsXmnEGpP0MAoW_uevo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1JBPz5pg8mGYp4pVNrBHf0YAMJsXmnEGpP0MAoW_uevo/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        368,
+        208
+      ],
+      "id": "ee1576ad-ba17-46d3-835e-c164b44c5f3d",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "JO4wiEc0WcR2s08m",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "b8856adc-237c-45b4-a040-51289f4454cc",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2a2943ebcc9214fb8e3d5b8a50e2b5869177ac44abb6a0bbb79a2ef4364145ea"
+  },
+  "id": "HxcE5NKnsSzbKv87",
+  "tags": []
+}
