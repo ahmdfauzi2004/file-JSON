@@ -1,0 +1,160 @@
+{
+  "name": "AI Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Halo, Ada yang bisa dibantu?",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "47b43ec7-2acc-4f26-b390-56a0029d0912",
+      "name": "When chat message received",
+      "webhookId": "461300ec-52f6-4af7-96c4-4c63bfe10798"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Kamu asisten penulisan ilmiah tugas akhir\natau skripsi.\nKamu dapat menjawab dengan mengacu\ninformasi yang tersedia di data vektor pada\nTool “Supabase Vector Store.”\nJika informasi tidak tersedia di Tool itu,\njawablah “Mohon maaf, saya belum dapat\nmemberikan jawaban."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "05bcb114-5736-4a49-a905-47e645a9e1aa",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "7063423a-3c45-42fe-b596-56a13ff00c9a",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ycoaSRDzyUwwuxWj",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Panggil tools ini untuk menjawab pertanyaan tentang penulisan ilmiah mahasiswa",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        480,
+        192
+      ],
+      "id": "b614c2d2-257b-43e4-9593-9f44268aa3a0",
+      "name": "Supabase Vector Store",
+      "credentials": {
+        "supabaseApi": {
+          "id": "o5lDSEd4OLvxVVZg",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-embedding-001"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        576,
+        400
+      ],
+      "id": "e4a5a914-201e-437d-8f13-65b8d3310dbc",
+      "name": "Embeddings Google Gemini",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ycoaSRDzyUwwuxWj",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "7aa94e09-4ea0-4e45-948f-e2a950528c46",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2a2943ebcc9214fb8e3d5b8a50e2b5869177ac44abb6a0bbb79a2ef4364145ea"
+  },
+  "id": "bd7S7jg5GFQKVPAU",
+  "tags": []
+}
